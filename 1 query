@@ -1,0 +1,6 @@
+1.-- Display list of product with base price is greater than 500 and that are featured promo type is 'BOGOF' (by one get one free)
+
+select 	dp.product_name as product_name, fe.base_price as price
+from dim_products dp inner join fact_events fe
+on dp.product_code = fe.product_code
+where fe.base_price > 500 and promo_type = 'BOGOF';
