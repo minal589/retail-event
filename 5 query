@@ -1,0 +1,41 @@
+5 - Calaculate top 5 product ranked by incremental revenue% across all campaign display product name, category and ir%
+
+with productSale as(
+	select fe.product_code as product_code, dp.product_name as product_name, dp.category as category,
+	sum(fe.base_price * quantity_sold_before_promo) as revenue_before,
+	sum(fe.base_price * quantity_sold_after_promo) as revenue_after
+	from dim_campaigns dc join fact_events fe
+	on dc.campaign_id = fe.campaign_id join dim_products dp
+	on dp.product_code = fe.product_code
+	group by fe.product_code, dp.product_name, dp.category
+),
+ProductIR as (
+	select product_code, product_name, category ,
+		(CASE
+	    WHEN revenue_before = 0 THEN 100.0 -- Avoid division by zero
+            ELSE ((revenue_after - revenue_before) / revenue_before) * 100.0
+        END) AS IR_percentage
+    FROM
+        productSale
+)
+select product_name, category, IR_percentage,
+rank() over(order by IR_percentage desc ) as IR_rank
+from ProductIR
+limit 5;
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
