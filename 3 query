@@ -1,4 +1,4 @@
-3 -- display query each campaign along with totla revenue genereated before promotion and after promotion
+3 -- display query each campaign along with total revenue genereated before promotion and after promotion
 
 select 	dp.product_name as product_name, fe.base_price as price
 from dim_products dp inner join fact_events fe
